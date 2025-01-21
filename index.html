@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body id="body" style="height:100vh;background-color: black;font-family: Arial, sans-serif; cursor:pointer">
+    <div style="display:flex;flex-direction:column;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:white;justify-content: space-around; height: 100%;">
+        <div>
+    <h1 id="title" style="font-size: 60px; line-height: 60px; padding: 0px;">Reaction Time Test</h1>
+    <h2 id="info" style="line-height: 0px;">Click Anywhere to Begin</h2>
+</div>
+    <div>
+    <h2 id="lastTime"></h2>
+    <p id="prevTimes"><br><br><br><br><br></p>
+</div>
+</div>
+<script>
+    let state=0;
+    let startT;
+    let endT;
+    let times = [];
+    let info = document.getElementById("info");
+    timeoutId = null;
+    document.addEventListener("click",start);
+    function start(){
+        if (state === 0){
+            state=1;
+            document.body.style.backgroundColor="red";
+            info.innerHTML = "Wait for Green";
+            document.getElementById("body").style.cursor = "progress";
+            timeoutId = setTimeout(function(){
+                console.log("timeout");
+                startT = new Date().getTime();
+                info.innerHTML = "Click!";
+                document.body.style.backgroundColor="green";
+                document.getElementById("body").style.cursor = "pointer";
+                state = 2;
+            },Math.random()*3000+2000);
+                
+            }
+        else if(state === 2){
+            endT = new Date().getTime();
+            let timeMs = endT - startT;
+            document.getElementById("lastTime").innerHTML = timeMs+"ms";
+            document.getElementById("prevTimes").innerHTML = times.join("<br>");
+            times.unshift(timeMs+"ms");
+            info.innerHTML = "Click Anywhere to Begin";
+            state = 0;
+            document.body.style.backgroundColor="black";
+        } else if(state === 1){
+            state = 0;
+            info.innerHTML = "Too Early!";
+            document.body.style.backgroundColor="black";
+            clearTimeout(timeoutId);
+            document.getElementById("body").style.cursor = "pointer";
+        }
+        }
+
+    
+</script>
+</body>
+</html>
